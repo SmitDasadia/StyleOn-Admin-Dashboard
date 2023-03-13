@@ -15,6 +15,11 @@ const navigation = [
     icon: "bi bi-eye",
   },
   {
+    title: "Add Product",
+    href: "/addProduct",
+    icon: "bi bi-plus",
+  },
+  {
     title: "Users",
     href: "/users",
     icon: "bi bi-people",

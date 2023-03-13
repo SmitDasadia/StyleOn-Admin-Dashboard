@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
@@ -114,26 +115,26 @@ const Header = ({ showMobmenu}) => {
           <Dropdown isOpen={dropdownOpen} toggle={toggle}>
             <DropdownToggle color="dark">
               <div style={{ lineHeight: "0px" }}>
-                <Image
-                  src={user1}
+                <img
+                  src='https://cdn-icons-png.flaticon.com/512/1154/1154459.png?w=740&t=st=1678703296~exp=1678703896~hmac=3c973ff9bb5a45b73b75022a45fa1bdf4410fe8c2b158cb5685a1958361b09b2'
                   alt="profile"
                   className="rounded-circle"
-                  width="30"
-                  height="30"
+                  width="40"
+                  height="40  "
                 />
               </div>
             </DropdownToggle>
-            <DropdownMenu>
+            <DropdownMenu className="m-2 p-3 " tyle={{ width: "250px", height: "150px" }}>
               <DropdownItem header>Info</DropdownItem>
               <DropdownItem>My Account</DropdownItem>
               <DropdownItem>Edit Profile</DropdownItem>
-              <DropdownItem divider />
-              <DropdownItem>My Balance</DropdownItem>
-              <DropdownItem>Inbox</DropdownItem>
+              
+              <DropdownItem></DropdownItem>
+              <DropdownItem></DropdownItem>
 
               {/* <button type="button" className="btn btn-dark">Dark</button> */}
 
-              <DropdownItem onClick={logout}>Logout</DropdownItem>
+              <DropdownItem className="btn bg-dark rounded-4 px-4 text-center text-white mt-10" onClick={logout}>Logout</DropdownItem>
             </DropdownMenu>
           </Dropdown>
 
