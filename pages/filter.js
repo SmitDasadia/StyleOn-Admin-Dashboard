@@ -50,22 +50,12 @@ const viewProducts = ({ products }) => {
                 <CardBody>
                     <CardTitle tag="h5">All Products</CardTitle>
 
-                    <div className="container">
-                        <div className="row justify-content-center">
-                            <div className="col-lg-6 col-md-8 col-sm-10">
-                                <form className="form-inline">
-                                    <div className="input-group">
-                                        <input className="form-control rounded-pill py-2" type="text"
-                                            placeholder="Search products by title"
-                                            value={search}
-                                            onChange={(e) => setSearch(e.target.value)} />
-
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-
+                    {/* <div className="mb-3 d-flex justify-content-between">
+                        <input type="text" placeholder="Search products by title"
+                      value={searchValue}
+                      onChange={(e) => setSearchValue(e.target.value)} />
+                        
+                    </div> */}
 
                     <div className="table-responsive">
                         <Table className="text-nowrap mt-3 align-middle border-2 rounded" borderless>
@@ -77,7 +67,7 @@ const viewProducts = ({ products }) => {
                                     <th className="cursor-pointer" onClick={() => handleSort("category")}>Category {sort.column === "category" ? (sort.order === "asc" ? "▲" : "▼") : null}</th>
                                     <th className="cursor-pointer" onClick={() => handleSort("size")}>Size {sort.column === "size" ? (sort.order === "asc" ? "▲" : "▼") : null}</th>
                                     <th className="cursor-pointer" onClick={() => handleSort("color")}>Color {sort.column === "color" ? (sort.order === "asc" ? "▲" : "▼") : null}</th>
-                                    <th className="cursor-pointer" onClick={() => handleSort("avialableQty")}>Qty {sort.column === "avialableQty" ? (sort.order === "asc" ? "▲" : "▼") : null}</th>
+                                    <th  className="cursor-pointer"onClick={() => handleSort("avialableQty")}>Qty {sort.column === "avialableQty" ? (sort.order === "asc" ? "▲" : "▼") : null}</th>
                                     <th className="cursor-pointer" onClick={() => handleSort("price")}>Price {sort.column === "price" ? (sort.order === "asc" ? "▲" : "▼") : null}</th>
 
                                 </tr>

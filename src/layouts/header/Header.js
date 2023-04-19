@@ -84,7 +84,7 @@ const Header = ({ showMobmenu}) => {
       theme="light"
     />
         <NavbarBrand href="/" className="d-lg-none">
-          <Image src={LogoWhite} alt="logo" />
+          {/* <Image src={LogoWhite} alt="logo" /> */}
         </NavbarBrand>
         {/* <div className="text-white ">
           StyleOn Admin Dashboard

@@ -2,15 +2,17 @@ import mongoose, { connect } from 'mongoose';
 
 
 
-const OrderSchema = new mongoose.Schema({
-    userID: { type: String, required: true },
-    product: [{
-        productId: { type: String },
-        quantity: { type: String, default: 1 }
-    }],
+const OrderSchema = new mongoose.Schema({ 
+    name: { type: String, required: true },
+    email: { type: String, required: true },
+    orderId: { type: String, required: true },
+    paymentInfo: { type: String, default: ' '},
+    product: {type: Object, required: true},
     address: { type: String, required: true },
+    pincode: { type: Number, required: true },
+    phone: { type: Number, required: true },
     amount: { type: Number, required: true },
-    status: { type: String, required: true },
+    paymentInfo: { type: String, default:"Initated", required: true },
 }, { timestamps: true });
 
 mongoose.models = {}

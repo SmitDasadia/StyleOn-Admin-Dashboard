@@ -17,7 +17,7 @@ const navigation = [
   {
     title: "Add Product",
     href: "/addProduct",
-    icon: "bi bi-plus",
+    icon: "bi bi-plus-circle",
   },
   {
     title: "Users",
@@ -76,13 +76,13 @@ const Sidebar = ({ showMobilemenu }) => {
   const location = curl.pathname;
 
   return (
-    <div className="p-3">
+    <div className="p-6">
       <div className="d-flex align-items-center">
-        <Logo />
+        <h3 className="m-2 p-3">StyleOn Admin </h3>
         <Button
           close
           size="sm"
-          className="ms-auto d-lg-none"
+          className="ms-auto d-lg-none p-5"
           onClick={showMobilemenu}
         ></Button>
       </div>
@@ -94,7 +94,7 @@ const Sidebar = ({ showMobilemenu }) => {
                 <a
                   className={
                     location === navi.href
-                      ? "text-white bg-dark border-2 rounded nav-link py-3"
+                      ? "text-white bg-dark border-2 rounded nav-link py-3 m-2"
                       : "nav-link text-secondary py-3"
                   }
                 >
