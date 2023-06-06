@@ -6,7 +6,7 @@ import FullLayout from '../src/layouts/FullLayout';
 import { useState } from "react";
 import Product from '../models/Product';
 const mongoose = require('mongoose');
-
+import * as Icon from 'react-feather';
 
 
 
@@ -79,6 +79,8 @@ const viewProducts = ({ products }) => {
                                     <th className="cursor-pointer" onClick={() => handleSort("color")}>Color {sort.column === "color" ? (sort.order === "asc" ? "▲" : "▼") : null}</th>
                                     <th className="cursor-pointer" onClick={() => handleSort("avialableQty")}>Qty {sort.column === "avialableQty" ? (sort.order === "asc" ? "▲" : "▼") : null}</th>
                                     <th className="cursor-pointer" onClick={() => handleSort("price")}>Price {sort.column === "price" ? (sort.order === "asc" ? "▲" : "▼") : null}</th>
+                                    <th className="cursor-pointer" >Edit </th>
+                                    <th className="cursor-pointer" >Delete </th>
 
                                 </tr>
                             </thead>
@@ -118,6 +120,8 @@ const viewProducts = ({ products }) => {
                                         <td>{tdata.color}</td>
                                         <td>{tdata.avialableQty}</td>
                                         <td>{tdata.price}</td>
+                                        <td className="cursor-pointer"><button type="button" className="btn btn-success btn-md text-white"><i className='bi bi-pen '></i></button></td>
+                                        <td className="cursor-pointer"><button type="button" className="btn btn-danger btn-md text-white"><i className='bi bi-trash '></i></button></td>
                                     </tr>
                                 ))}
                             </tbody>
