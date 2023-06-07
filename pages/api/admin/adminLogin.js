@@ -1,5 +1,5 @@
-import Admin from "../../models/Admin"
-import connectDb from "../../middleware/mongoose"
+import Admin from "../../../models/Admin"
+import connectDb from "../../../middleware/mongoose"
 var CryptoJS = require("crypto-js")
 var jwt = require('jsonwebtoken');
 

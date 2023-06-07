@@ -1,6 +1,5 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable @next/next/no-img-element */
-import Image from "next/image";
 import { Card, CardBody, CardTitle, CardSubtitle, Table } from "reactstrap";
 import FullLayout from '../src/layouts/FullLayout';
 import { useState } from "react";
@@ -70,7 +69,7 @@ const users = ({ products }) => {
 
                     <div className="table-responsive">
                         <Table className="text-nowrap mt-3 align-middle border-2 rounded" borderless>
-                            <thead className="bg-black text-white">
+                            <thead className="text-black">
                                 <tr>
                                     <th className="cursor-pointer" onClick={() => handleSort("No")}>No {sort.column === "No" ? (sort.order === "asc" ? "▲" : "▼") : null}</th>
                                     

@@ -1,12 +1,12 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable @next/next/no-img-element */
-import Image from "next/image";
-import { Card, CardBody, CardTitle, CardSubtitle, Table } from "reactstrap";
-import FullLayout from '../src/layouts/FullLayout';
 import { useState } from "react";
+import { Card, CardBody, CardTitle, Table, Modal, ModalHeader, ModalBody, ModalFooter, Button } from "reactstrap";
+import FullLayout from '../src/layouts/FullLayout';
 import Product from '../models/Product';
 const mongoose = require('mongoose');
-import * as Icon from 'react-feather';
+import { ToastContainer, toast } from 'react-toastify';
+
 
 
 
@@ -14,6 +14,16 @@ import * as Icon from 'react-feather';
 const viewProducts = ({ products }) => {
     const [sort, setSort] = useState({ column: "No", order: "asc" });
     const [search, setSearch] = useState("");
+    const [selectedProduct, setSelectedProduct] = useState(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [updatedProduct, setUpdatedProduct] = useState({
+        title: "",
+        slug: "",
+        category: "",
+        price: ""
+    });
 
     const sortedProducts = [...products].sort((a, b) => {
         const isAsc = sort.order === "asc";
@@ -43,8 +53,132 @@ const viewProducts = ({ products }) => {
     };
 
 
+
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+
+        setUpdatedProduct((prevProduct) => ({
+            ...prevProduct,
+            [name]: name === 'price' ? parseFloat(value) : value,
+        }));
+    };
+
+    const handleEdit = (product) => {
+        setSelectedProduct(product);
+        setUpdatedProduct({
+            title: product.title,
+            slug: product.slug,
+            desc: product.desc,
+            img: product.img,
+            category: product.category,
+            size: product.price,
+            color: product.color,
+            price: product.price,
+            avialableQty: product.avialableQty,
+        });
+        setIsEditModalOpen(true);
+    };
+
+    const handleUpdate = async () => {
+        try {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/product/updateProduct?productId=${selectedProduct._id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(updatedProduct)
+            });
+
+            const res = await response.json();
+            if (res.success) {
+                toast.success("Product has been Updated.", {
+                    position: "top-left",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                });
+                setSelectedProduct(null);
+                setUpdatedProduct({
+                    title: "",
+                    slug: "",
+                    category: "",
+                    price: ""
+                });
+            } else {
+                toast.error('error in product updation!', {
+                    position: "top-left",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                });
+            }
+
+
+
+            setIsEditModalOpen(false);
+
+        } catch (error) {
+            console.error('Error occurred while updating the product', error);
+        }
+    };
+
+
+    const handleDeleteProduct = async () => {
+        let res = await fetch(
+            `${process.env.NEXT_PUBLIC_HOST}/api/product/deleteProduct?productId=${selectedProduct?._id}`,
+            {
+                method: 'DELETE',
+            }
+        );
+        let response = await res.json();
+        toast.success("Product has been deleted.", {
+            position: "top-left",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+        });
+
+        setIsModalOpen(false);
+    };
+
+    const handleOpenModal = (product) => {
+        setSelectedProduct(product);
+        setIsModalOpen(true);
+    };
+
+    const handleCloseModal = () => {
+        setSelectedProduct(null);
+        setIsModalOpen(false);
+    };
+
+
+
     return (
         <FullLayout>
+            <ToastContainer
+                position="top-left"
+                autoClose={3000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="light"
+            />
 
             <Card>
                 <CardBody>
@@ -79,8 +213,7 @@ const viewProducts = ({ products }) => {
                                     <th className="cursor-pointer" onClick={() => handleSort("color")}>Color {sort.column === "color" ? (sort.order === "asc" ? "▲" : "▼") : null}</th>
                                     <th className="cursor-pointer" onClick={() => handleSort("avialableQty")}>Qty {sort.column === "avialableQty" ? (sort.order === "asc" ? "▲" : "▼") : null}</th>
                                     <th className="cursor-pointer" onClick={() => handleSort("price")}>Price {sort.column === "price" ? (sort.order === "asc" ? "▲" : "▼") : null}</th>
-                                    <th className="cursor-pointer" >Edit </th>
-                                    <th className="cursor-pointer" >Delete </th>
+                                    <th className="cursor-pointer">Action</th>
 
                                 </tr>
                             </thead>
@@ -120,8 +253,22 @@ const viewProducts = ({ products }) => {
                                         <td>{tdata.color}</td>
                                         <td>{tdata.avialableQty}</td>
                                         <td>{tdata.price}</td>
-                                        <td className="cursor-pointer"><button type="button" className="btn btn-success btn-md text-white"><i className='bi bi-pen '></i></button></td>
-                                        <td className="cursor-pointer"><button type="button" className="btn btn-danger btn-md text-white"><i className='bi bi-trash '></i></button></td>
+                                        <td>
+                                            <button
+                                                type="button"
+                                                className="btn btn-success btn-md text-white"
+                                                onClick={() => handleEdit(tdata)}
+                                            >
+                                                <i className="bi bi-pen"></i>
+                                            </button>
+                                            <button
+                                                type="button"
+                                                className="btn btn-danger btn-md text-white ms-2"
+                                                onClick={() => handleOpenModal(tdata)}
+                                            >
+                                                <i className="bi bi-trash"></i>
+                                            </button>
+                                        </td>
                                     </tr>
                                 ))}
                             </tbody>
@@ -129,6 +276,147 @@ const viewProducts = ({ products }) => {
                     </div>
                 </CardBody>
             </Card>
+
+            <Modal isOpen={isEditModalOpen} toggle={() => setIsEditModalOpen(!isEditModalOpen)}>
+                <ModalHeader toggle={() => setIsEditModalOpen(!isEditModalOpen)}>Edit Product</ModalHeader>
+                <ModalBody>
+                    {selectedProduct && (
+                        <form>
+                            <div className="mb-3">
+                                <label htmlFor="title" className="form-label">Title</label>
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    id="title"
+                                    name="title"
+                                    value={updatedProduct?.title || selectedProduct.title}
+                                    onChange={handleInputChange}
+                                />
+                            </div>
+                            <div className="mb-3">
+                                <label htmlFor="slug" className="form-label">Slug</label>
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    id="slug"
+                                    name="slug"
+                                    value={updatedProduct?.slug || selectedProduct.slug}
+                                    onChange={handleInputChange}
+                                />
+                            </div>
+                            <div className="mb-3">
+                                <label htmlFor="desc" className="form-label">Desc</label>
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    id="desc"
+                                    name="desc"
+                                    value={updatedProduct?.desc || selectedProduct.desc}
+                                    onChange={handleInputChange}
+                                />
+                            </div>
+                            <div className="mb-3">
+                                <label htmlFor="img" className="form-label">Img</label>
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    id="img"
+                                    name="img"
+                                    value={updatedProduct?.img || selectedProduct.img}
+                                    onChange={handleInputChange}
+                                />
+                            </div>
+                            <div className="mb-3">
+                                <label htmlFor="category" className="form-label">Category</label>
+                                <select
+                                    className="form-control"
+                                    id="category"
+                                    name="category"
+                                    value={updatedProduct?.category || selectedProduct.category}
+                                    onChange={handleInputChange}
+                                >
+                                    <option value="">Select Category</option>
+                                    <option value="SportsWear">SportsWear</option>
+                                    <option value="Tshirt">Tshirt</option>
+                                    <option value="Ethinx">Ethinx</option>
+                                    <option value="Shorts">Shorts</option>
+                                    {/* Add more options here */}
+                                </select>
+                            </div>
+
+                            <div className="mb-3">
+                                <label htmlFor="size" className="form-label">Size</label>
+                                <select
+                                    className="form-control"
+                                    id="size"
+                                    name="size"
+                                    value={updatedProduct?.size || selectedProduct.size}
+                                    onChange={handleInputChange}
+                                >
+                                    <option value="">Select Size</option>
+                                    <option value="S">S</option>
+                                    <option value="M">M</option>
+                                    <option value="L">L</option>
+                                    <option value="XL">XL</option>
+                                    {/* Add more options here */}
+                                </select>
+                            </div>
+
+                            <div className="mb-3">
+                                <label htmlFor="color" className="form-label">Color</label>
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    id="color"
+                                    name="color"
+                                    value={updatedProduct?.color || selectedProduct.color}
+                                    onChange={handleInputChange}
+                                />
+                            </div>
+                            <div className="mb-3">
+                                <label htmlFor="price" className="form-label">Price</label>
+                                <input
+                                    type="number"
+                                    className="form-control"
+                                    id="price"
+                                    name="price"
+                                    value={updatedProduct?.price || selectedProduct.price}
+                                    onChange={handleInputChange}
+                                />
+                            </div>
+                            <div className="mb-3">
+                                <label htmlFor="avialableQty" className="form-label">AvialableQty</label>
+                                <input
+                                    type="number"
+                                    className="form-control"
+                                    id="avialableQty"
+                                    name="avialableQty"
+                                    value={updatedProduct?.avialableQty || selectedProduct.avialableQty}
+                                    onChange={handleInputChange}
+                                />
+                            </div>
+                        </form>
+                    )}
+                </ModalBody>
+                <ModalFooter>
+                    <Button color="primary" onClick={handleUpdate}>Update</Button>{' '}
+                    <Button color="secondary" onClick={() => setIsEditModalOpen(false)}>Cancel</Button>
+                </ModalFooter>
+            </Modal>
+
+            <Modal isOpen={isModalOpen} toggle={handleCloseModal}>
+                <ModalBody>
+                    Are you sure you want to delete the product: {selectedProduct?.title} {selectedProduct?._id}?
+                </ModalBody>
+                <ModalFooter>
+                    <Button color="danger" onClick={handleDeleteProduct}>
+                        Delete
+                    </Button>
+                    <Button color="secondary" onClick={handleCloseModal}>
+                        Cancel
+                    </Button>
+                </ModalFooter>
+            </Modal>
         </FullLayout>
     );
 };
