@@ -21,8 +21,13 @@ const viewProducts = ({ products }) => {
     const [updatedProduct, setUpdatedProduct] = useState({
         title: "",
         slug: "",
+        desc: "",
+        img: "",
         category: "",
-        price: ""
+        size: "",
+        color: "",
+        price: "",
+        avialableQty: "",
     });
 
     const sortedProducts = [...products].sort((a, b) => {
@@ -105,8 +110,13 @@ const viewProducts = ({ products }) => {
                 setUpdatedProduct({
                     title: "",
                     slug: "",
+                    desc: "",
+                    img: "",
                     category: "",
-                    price: ""
+                    size: "",
+                    color: "",
+                    price: "",
+                    avialableQty: "",
                 });
             } else {
                 toast.error('error in product updation!', {
